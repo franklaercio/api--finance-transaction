@@ -1,0 +1,1 @@
+CREATE SEQUENCE accounts_seq START 1;
