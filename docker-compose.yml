@@ -1,19 +1,73 @@
 version: "3.7"
 
 services:
-  database_transaction:
-    image: postgres
-    container_name: database_transaction
+  cache:
+    image: redis:6.2-alpine
+    container_name: cache
     restart: always
     ports:
-      - 5432:5432
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+  redisinsight:
+    container_name: redis-insight
+    image: redislabs/redisinsight:latest
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight:/data/redisinsight
+  localstack-transaction:
+    container_name: localstack-transaction
+    image: localstack/localstack:latest
+    environment:
+      - SERVICES=redis
+      - DATA_DIR=/tmp/localstack-transaction/data
+    ports:
+      - "4566-4583:4566-4583"
+    volumes:
+      - "/tmp/localstack-transaction/data"
+  db-transaction:
+    image: postgres
+    container_name: db-transaction
+    restart: always
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=transaction
     volumes:
       - pgdata:/data/postgres
+  api:
+    container_name: service--transaction-pismo
+    image: service--transaction-pismo
+    build: .
+    depends_on:
+      - db-transaction
+      - cache
+      - localstack-transaction
+      - redisinsight
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRESQL_URL: jdbc:postgresql://db-transaction:5432/transaction
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: transaction
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+    links:
+      - db-transaction
+      - cache
+      - localstack-transaction
+    volumes:
+      - ./:/src
 
 volumes:
   pgdata:
+    driver: local
+  cache:
+    driver: local
+  redisinsight:
     driver: local
