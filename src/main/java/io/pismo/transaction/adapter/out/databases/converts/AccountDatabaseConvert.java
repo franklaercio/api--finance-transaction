@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GetAccountConvert implements Converter<AccountEntity, Account> {
+public class AccountDatabaseConvert implements Converter<AccountEntity, Account> {
 
   @Override
   public Account convert(AccountEntity source) {

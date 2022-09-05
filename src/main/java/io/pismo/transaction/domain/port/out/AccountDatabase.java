@@ -6,6 +6,6 @@ public interface AccountDatabase {
 
   void createAccount(String documentNumber);
 
-  Account getAccountById(Integer accountId);
+  Account findAccountById(Long accountId);
 
 }

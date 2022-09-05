@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Api(tags = "Account")
@@ -33,5 +32,5 @@ public interface AccountController {
       @ApiResponse(responseCode = "404", description = "Not found account"),
       @ApiResponse(responseCode = "500", description = "Internal server error")}
   )
-  ResponseEntity<GetAccountResponse> getAccountById(@RequestParam(name = "accountId") Integer accountId);
+  ResponseEntity<GetAccountResponse> getAccountById(@RequestParam(name = "accountId") Long accountId);
 }

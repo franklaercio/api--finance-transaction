@@ -28,11 +28,11 @@ public class AccountUseCaseImpl implements AccountUseCase {
   }
 
   @Override
-  public Account getAccountById(Integer accountId) {
+  public Account findAccountById(Long accountId) {
     if(Objects.isNull(accountId)) {
       throw new BadRequestException("Account isn't valid, please check your data");
     }
 
-    return this.accountDatabase.getAccountById(accountId);
+    return this.accountDatabase.findAccountById(accountId);
   }
 }

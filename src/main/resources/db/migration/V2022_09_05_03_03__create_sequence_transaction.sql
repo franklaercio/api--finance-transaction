@@ -1,0 +1,1 @@
+CREATE SEQUENCE transaction_seq START 1;

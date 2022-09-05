@@ -1,5 +1,5 @@
 CREATE TABLE ACCOUNT(
-  ID integer NOT NULL,
-  DOCUMENT_NUMBER varchar(11) NOT NULL,
+  ID bigint not null,
+  DOCUMENT_NUMBER varchar(11) not null,
   PRIMARY KEY (ID)
 );

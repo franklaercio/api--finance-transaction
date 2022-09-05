@@ -2,15 +2,15 @@ package io.pismo.transaction.domain.models;
 
 public class Account {
 
-  private int accountId;
+  private Long accountId;
   private String documentNumber;
 
-  public Account(int accountId, String documentNumber) {
+  public Account(Long accountId, String documentNumber) {
     this.accountId = accountId;
     this.documentNumber = documentNumber;
   }
 
-  public int getAccountId() {
+  public Long getAccountId() {
     return accountId;
   }
 
@@ -18,7 +18,7 @@ public class Account {
     return documentNumber;
   }
 
-  public void setAccountId(int accountId) {
+  public void setAccountId(Long accountId) {
     this.accountId = accountId;
   }
 

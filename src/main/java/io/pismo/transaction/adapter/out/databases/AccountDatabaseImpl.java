@@ -1,6 +1,6 @@
 package io.pismo.transaction.adapter.out.databases;
 
-import io.pismo.transaction.adapter.out.databases.converts.GetAccountConvert;
+import io.pismo.transaction.adapter.out.databases.converts.AccountDatabaseConvert;
 import io.pismo.transaction.adapter.out.databases.entities.AccountEntity;
 import io.pismo.transaction.adapter.out.databases.repositories.AccountRepository;
 import io.pismo.transaction.domain.exceptions.NotFoundException;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 public class AccountDatabaseImpl implements AccountDatabase {
 
   private final AccountRepository accountRepository;
-  private final GetAccountConvert getAccountConvert;
+  private final AccountDatabaseConvert accountDatabaseConvert;
 
   public AccountDatabaseImpl(AccountRepository accountRepository,
-      GetAccountConvert getAccountConvert) {
+      AccountDatabaseConvert accountDatabaseConvert) {
     this.accountRepository = accountRepository;
-    this.getAccountConvert = getAccountConvert;
+    this.accountDatabaseConvert = accountDatabaseConvert;
   }
 
   public void createAccount(String documentNumber) {
@@ -29,14 +29,14 @@ public class AccountDatabaseImpl implements AccountDatabase {
   }
 
   @Override
-  public Account getAccountById(Integer accountId) {
+  public Account findAccountById(Long accountId) {
     AccountEntity accountEntity = this.accountRepository.findById(accountId).orElse(null);
 
     if(Objects.isNull(accountEntity)) {
       throw new NotFoundException("Account not found, please check your request and try again");
     }
 
-    return this.getAccountConvert.convert(accountEntity);
+    return this.accountDatabaseConvert.convert(accountEntity);
   }
 
 }

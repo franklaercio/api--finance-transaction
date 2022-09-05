@@ -15,16 +15,16 @@ public class AccountEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_generator")
   @SequenceGenerator(name = "accounts_generator", sequenceName = "accounts_seq", allocationSize = 1)
-  private int id;
+  private long id;
 
   @Column(name = "DOCUMENT_NUMBER", length = 11)
   private String documentNumber;
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

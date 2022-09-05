@@ -9,17 +9,17 @@ public class GetAccountResponse {
 
   @ApiModelProperty(example = "1")
   @JsonProperty("account_id")
-  private Integer accountId;
+  private Long accountId;
 
   @ApiModelProperty(example = "12345678900")
   @JsonProperty("document_number")
   private String documentNumber;
 
-  public Integer getAccountId() {
+  public Long getAccountId() {
     return accountId;
   }
 
-  public void setAccountId(Integer accountId) {
+  public void setAccountId(Long accountId) {
     this.accountId = accountId;
   }
 

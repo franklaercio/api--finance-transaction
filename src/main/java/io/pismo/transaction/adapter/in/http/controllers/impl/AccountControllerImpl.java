@@ -31,8 +31,8 @@ public class AccountControllerImpl implements AccountController {
   }
 
   @Override
-  public ResponseEntity<GetAccountResponse> getAccountById(Integer accountId) {
-    Account account = this.accountUseCase.getAccountById(accountId);
+  public ResponseEntity<GetAccountResponse> getAccountById(Long accountId) {
+    Account account = this.accountUseCase.findAccountById(accountId);
     GetAccountResponse response = this.accountResponseConvert.convert(account);
 
     return ResponseEntity.ok(response);
