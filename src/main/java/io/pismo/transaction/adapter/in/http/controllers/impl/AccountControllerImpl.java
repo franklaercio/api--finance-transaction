@@ -1,8 +1,10 @@
 package io.pismo.transaction.adapter.in.http.controllers.impl;
 
 import io.pismo.transaction.adapter.in.http.controllers.AccountController;
+import io.pismo.transaction.adapter.in.http.controllers.converts.AccountResponseConvert;
 import io.pismo.transaction.adapter.in.http.controllers.data.request.CreateAccountRequest;
 import io.pismo.transaction.adapter.in.http.controllers.data.response.GetAccountResponse;
+import io.pismo.transaction.domain.models.Account;
 import io.pismo.transaction.domain.port.in.AccountUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountControllerImpl implements AccountController {
 
   private final AccountUseCase accountUseCase;
+  private final AccountResponseConvert accountResponseConvert;
 
-  public AccountControllerImpl(AccountUseCase accountUseCase) {
+  public AccountControllerImpl(AccountUseCase accountUseCase, AccountResponseConvert accountResponseConvert) {
     this.accountUseCase = accountUseCase;
+    this.accountResponseConvert = accountResponseConvert;
   }
 
   @Override
@@ -27,7 +31,10 @@ public class AccountControllerImpl implements AccountController {
   }
 
   @Override
-  public ResponseEntity<GetAccountResponse> getAccountById(int accountId) {
-    return null;
+  public ResponseEntity<GetAccountResponse> getAccountById(Integer accountId) {
+    Account account = this.accountUseCase.getAccountById(accountId);
+    GetAccountResponse response = this.accountResponseConvert.convert(account);
+
+    return ResponseEntity.ok(response);
   }
 }
