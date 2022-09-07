@@ -49,7 +49,7 @@ public class TransactionUseCaseImplTest {
   }
 
   @Test
-  void should_give_bad_request_with_payment_not_valid() {
+  void should_give_bad_request_when_payment_is_not_valid() {
     when(accountUseCase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
     when(operationUseCase.findOperationById(any())).thenReturn(
         new Operation(4L, "PAGAMENTO"));

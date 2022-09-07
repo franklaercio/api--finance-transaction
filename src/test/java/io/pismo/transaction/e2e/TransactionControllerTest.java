@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.pismo.transaction.Application;
@@ -65,8 +67,8 @@ public class TransactionControllerTest {
     this.mockMvc.perform(
             post("/transactions")
                 .content("{"
-                    + "  \"acccount_id\": 1,"
-                    + "  \"document_number\": 0.45,"
+                    + "  \"account_id\": 1,"
+                    + "  \"amount\": 0.45,"
                     + "  \"operation_id\": 4"
                     + "}")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -96,5 +98,39 @@ public class TransactionControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void should_given_bad_request_when_payment_is_not_valid() throws Exception {
+
+    this.mockMvc.perform(
+            post("/transactions")
+                .content("{"
+                    + "  \"account_id\": 1,"
+                    + "  \"amount\": -0.45,"
+                    + "  \"operation_id\": 4"
+                    + "}")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(content().contentType(MediaType.APPLICATION_JSON),
+            jsonPath("$.code").value(400),
+            jsonPath("$.message").value("Please verify your request and try again")
+        );
+  }
+
+  @Test
+  void should_given_created_when_payment_is_valid() throws Exception {
+
+    this.mockMvc.perform(
+            post("/transactions")
+                .content("{"
+                    + "  \"account_id\": 1,"
+                    + "  \"amount\": -0.45,"
+                    + "  \"operation_id\": 2"
+                    + "}")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isCreated());
   }
 }

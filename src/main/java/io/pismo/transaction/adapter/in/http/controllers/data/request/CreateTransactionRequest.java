@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class CreateTransactionRequest {
 
   @ApiModelProperty(example = "1")
-  @JsonProperty("acccount_id")
+  @JsonProperty("account_id")
   private Long acccountId;
 
   @ApiModelProperty(example = "4")
@@ -17,7 +17,7 @@ public class CreateTransactionRequest {
   private Long operationId;
 
   @ApiModelProperty(example = "123.45")
-  @JsonProperty("document_number")
+  @JsonProperty("amount")
   private BigDecimal amount;
 
   public Long getAcccountId() {
