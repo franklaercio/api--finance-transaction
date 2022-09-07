@@ -37,7 +37,7 @@ public class TransactionUseCaseImpl implements TransactionUseCase {
     Account account = this.accountUseCase.findAccountById(accountId);
     Operation operation = this.operationUseCase.findOperationById(operationId);
 
-    if (isPayment(operation) && amount.longValue() < 0) {
+    if (isPayment(operation) && amount.compareTo(new BigDecimal("0.0")) < 0) {
       throw new BadRequestException("Please verify your request and try again");
     }
 

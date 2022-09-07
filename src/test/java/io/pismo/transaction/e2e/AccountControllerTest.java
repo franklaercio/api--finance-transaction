@@ -31,7 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@DisplayName("AccountControllerTest")
+@DisplayName("AccountE2eTest")
 @ContextConfiguration(classes = {Application.class, ContainerUtil.class, RedisProperties.class},
     initializers = {ConfigDataApplicationContextInitializer.class})
 @SpringBootTest

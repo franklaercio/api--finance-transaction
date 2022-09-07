@@ -15,7 +15,9 @@ import io.pismo.transaction.adapter.in.http.controllers.impl.TransactionControll
 import io.pismo.transaction.adapter.out.databases.entities.TransactionEntity;
 import io.pismo.transaction.adapter.out.databases.repositories.TransactionRepository;
 import io.pismo.transaction.configs.properties.RedisProperties;
+import io.pismo.transaction.domain.models.enums.RedisKeyEnum;
 import io.pismo.transaction.domain.port.out.RedisCache;
+import io.pismo.transaction.utils.ContainerUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,10 +32,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@DisplayName("AccountControllerTest")
-@ContextConfiguration(classes = {Application.class, RedisProperties.class},
+@DisplayName("TransactionE2eTest")
+@ContextConfiguration(classes = {Application.class, ContainerUtil.class, RedisProperties.class},
     initializers = {ConfigDataApplicationContextInitializer.class})
-@SpringBootTest(classes = Application.class)
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
 public class TransactionControllerTest {
 
@@ -62,7 +64,7 @@ public class TransactionControllerTest {
   }
 
   @Test
-  void should__get_account_by_id_and_save_cache() throws Exception {
+  void should_save_a_new_transaction() throws Exception {
 
     this.mockMvc.perform(
             post("/transactions")
@@ -83,11 +85,13 @@ public class TransactionControllerTest {
     assertEquals(2L, transaction.getId());
     assertEquals(0.45, transaction.getAmount().doubleValue());
 
-    String accountCache = this.redisCache.find("ACCOUNT-", "1").orElse(null);
-    String operationCache = this.redisCache.find("OPERATION-", "4").orElse(null);
+    String accountCache = this.redisCache.find(RedisKeyEnum.CACHE_ACCOUNT.getValue(), "1")
+        .orElse(null);
+    String operationCache = this.redisCache.find(RedisKeyEnum.CACHE_OPERATION.getValue(), "4")
+        .orElse(null);
 
     assertEquals("{\"accountId\":1,\"documentNumber\":\"12345678900\"}", accountCache);
-    assertEquals("{\"id\":4,\"description\":\"COMPRA PAGAMENTO\"}", operationCache);
+    assertEquals("{\"id\":4,\"description\":\"PAGAMENTO\"}", operationCache);
   }
 
   @Test

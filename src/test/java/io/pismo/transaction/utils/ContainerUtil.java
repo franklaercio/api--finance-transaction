@@ -1,6 +1,9 @@
 package io.pismo.transaction.utils;
 
 import org.springframework.boot.test.context.TestComponent;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
@@ -15,5 +18,12 @@ public class ContainerUtil {
 
   static {
     redis.start();
+  }
+
+  @Bean
+  public LettuceConnectionFactory redisConnectionFactory() {
+    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(
+        redis.getHost(), redis.getFirstMappedPort());
+    return new LettuceConnectionFactory(configuration);
   }
 }

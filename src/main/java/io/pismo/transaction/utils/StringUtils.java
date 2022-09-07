@@ -24,10 +24,6 @@ public class StringUtils {
     return true;
   }
 
-  public static boolean isNotBlank(CharSequence cs) {
-    return !isBlank(cs);
-  }
-
   public static boolean isNumber(String text) {
     return text.matches(".\\\\d+");
   }
