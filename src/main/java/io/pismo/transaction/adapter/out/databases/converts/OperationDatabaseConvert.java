@@ -10,9 +10,6 @@ public class OperationDatabaseConvert implements Converter<OperationEntity, Oper
 
   @Override
   public Operation convert(OperationEntity source) {
-    Operation operation = new Operation();
-    operation.setId(source.getId());
-    operation.setDescription(source.getDescription());
-    return operation;
+    return new Operation(source.getId(), source.getDescription());
   }
 }

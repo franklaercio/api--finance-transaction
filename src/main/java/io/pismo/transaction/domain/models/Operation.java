@@ -6,6 +6,11 @@ public class Operation {
 
   private String description;
 
+  public Operation(Long id, String description) {
+    this.id = id;
+    this.description = description;
+  }
+
   public Long getId() {
     return id;
   }

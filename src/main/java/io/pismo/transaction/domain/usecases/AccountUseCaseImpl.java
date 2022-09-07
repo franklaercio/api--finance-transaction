@@ -3,6 +3,7 @@ package io.pismo.transaction.domain.usecases;
 import com.google.gson.Gson;
 import io.pismo.transaction.domain.exceptions.BadRequestException;
 import io.pismo.transaction.domain.models.Account;
+import io.pismo.transaction.domain.models.enums.RedisKeyEnum;
 import io.pismo.transaction.domain.port.in.AccountUseCase;
 import io.pismo.transaction.domain.port.out.AccountDatabase;
 import io.pismo.transaction.domain.port.out.RedisCache;
@@ -41,7 +42,8 @@ public class AccountUseCaseImpl implements AccountUseCase {
       throw new BadRequestException("Account isn't valid, please check your data");
     }
 
-    Optional<String> cache = this.redisCache.find("ACCOUNT-", accountId.toString());
+    Optional<String> cache = this.redisCache.find(
+        RedisKeyEnum.CACHE_ACCOUNT.getValue(), accountId.toString());
 
     if (Objects.nonNull(cache) && cache.isPresent()) {
       return gson.fromJson(cache.get(), Account.class);
@@ -49,7 +51,8 @@ public class AccountUseCaseImpl implements AccountUseCase {
 
     Account account = this.accountDatabase.findAccountById(accountId);
 
-    this.redisCache.create("ACCOUNT-", accountId.toString(), gson.toJson(account));
+    this.redisCache.create(RedisKeyEnum.CACHE_ACCOUNT.getValue(),
+        accountId.toString(), gson.toJson(account));
 
     return account;
   }

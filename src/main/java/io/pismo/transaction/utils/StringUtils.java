@@ -18,7 +18,8 @@ public class StringUtils {
           return false;
         }
       }
-
+    } else {
+      return false;
     }
     return true;
   }
@@ -32,7 +33,7 @@ public class StringUtils {
   }
 
   public static boolean isNotNumberOrBlank(String text) {
-    return !isNumber(text) || isBlank(text);
+    return isBlank(text) && !isNumber(text);
   }
 
 }
