@@ -27,4 +27,12 @@ public class StringUtils {
     return !isBlank(cs);
   }
 
+  public static boolean isNumber(String text) {
+    return text.matches(".\\\\d+");
+  }
+
+  public static boolean isNotNumberOrBlank(String text) {
+    return !isNumber(text) || isBlank(text);
+  }
+
 }
