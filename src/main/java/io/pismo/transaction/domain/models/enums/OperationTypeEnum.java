@@ -4,10 +4,10 @@ import io.pismo.transaction.domain.exceptions.BadRequestException;
 import java.util.Arrays;
 
 public enum OperationTypeEnum {
-  COMPRA_VISTA("COMPRA A VISTA"),
-  COMPRA_PARCELADA("COMPRA PARCELADA"),
-  COMPRA_SAQUE("COMPRA SAQUE"),
-  COMPRA_PAGAMENTO("COMPRA PAGAMENTO");
+  CASH_PURCHASE("COMPRA A VISTA"),
+  PURCHASE_IN_INSTALLMENTS("COMPRA PARCELADA"),
+  WITHDRAW("SAQUE"),
+  PAYMENT("PAGAMENTO");
 
   private final String value;
 

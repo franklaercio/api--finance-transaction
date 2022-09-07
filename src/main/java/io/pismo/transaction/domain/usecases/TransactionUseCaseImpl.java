@@ -1,7 +1,10 @@
 package io.pismo.transaction.domain.usecases;
 
 import io.pismo.transaction.domain.exceptions.BadRequestException;
+import io.pismo.transaction.domain.models.Account;
+import io.pismo.transaction.domain.models.Operation;
 import io.pismo.transaction.domain.models.Transaction;
+import io.pismo.transaction.domain.models.enums.OperationTypeEnum;
 import io.pismo.transaction.domain.port.in.AccountUseCase;
 import io.pismo.transaction.domain.port.in.OperationUseCase;
 import io.pismo.transaction.domain.port.in.TransactionUseCase;
@@ -27,15 +30,32 @@ public class TransactionUseCaseImpl implements TransactionUseCase {
   @Override
   public void createTransaction(Long accountId, Long operationId, BigDecimal amount) {
 
-    if(Objects.isNull(accountId) || Objects.isNull(operationId) || Objects.isNull(amount)) {
+    if (Objects.isNull(accountId) || Objects.isNull(operationId) || Objects.isNull(amount)) {
       throw new BadRequestException("Please verify your request and try again");
     }
 
-    Transaction transaction = new Transaction();
-    transaction.setAccountId(this.accountUseCase.findAccountById(accountId).getAccountId());
-    transaction.setOperationId(this.operationUseCase.findOperationById(operationId).getId());
-    transaction.setAmount(amount);
+    Account account = this.accountUseCase.findAccountById(accountId);
+    Operation operation = this.operationUseCase.findOperationById(operationId);
 
-    this.transactionDatabase.createTransaction(transaction);
+    if (isPayment(operation) && amount.longValue() < 0) {
+      throw new BadRequestException("Please verify your request and try again");
+    }
+
+    if ((isWithDrawOrBuy(operation)) && amount.longValue() > 0) {
+      amount = amount.negate();
+    }
+
+    this.transactionDatabase.createTransaction(
+        new Transaction(account.getAccountId(), operation.getId(), amount));
+  }
+
+  private boolean isWithDrawOrBuy(Operation operation) {
+    return operation.getDescription().equals(OperationTypeEnum.WITHDRAW.getValue())
+        || operation.getDescription().equals(OperationTypeEnum.CASH_PURCHASE.getValue())
+        || operation.getDescription().equals(OperationTypeEnum.PURCHASE_IN_INSTALLMENTS.getValue());
+  }
+
+  private boolean isPayment(Operation operation) {
+    return operation.getDescription().equals(OperationTypeEnum.PAYMENT.getValue());
   }
 }
