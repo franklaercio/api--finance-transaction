@@ -1,6 +1,6 @@
-package io.pismo.transaction.adapter.out.redis;
+package io.pismo.transaction.configs;
 
-import org.springframework.beans.factory.annotation.Value;
+import io.pismo.transaction.configs.properties.RedisProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +13,16 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableCaching
 public class RedisCacheConfig {
 
-  @Value("${redis.host}")
-  private String host;
+  private final RedisProperties redisProperties;
 
-  @Value("${redis.port}")
-  private int port;
+  public RedisCacheConfig(RedisProperties redisProperties) {
+    this.redisProperties = redisProperties;
+  }
 
   @Bean
   public LettuceConnectionFactory redisConnectionFactory() {
-    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
+    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(
+        redisProperties.getHost(), redisProperties.getPort());
     return new LettuceConnectionFactory(configuration);
   }
 

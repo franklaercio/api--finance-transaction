@@ -4,6 +4,8 @@ spring:
     url: ${POSTGRESQL_URL:jdbc:postgresql://localhost:5432/transaction}
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:postgres}
+  profiles:
+    active: ${PROFILE_ACTIVE:dev}
   jpa:
     properties:
       hibernate:
@@ -14,7 +16,6 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: validate
-    show-sql: false
   cache:
     type: redis
   redis:
@@ -24,10 +25,10 @@ spring:
     baseline-on-migrate: true
     baseline-version: 1
     schemas:
-     - ${POSTGRESQL_DB:transaction}
+      - ${POSTGRESQL_DB:transaction}
     table: flyway-transaction
 
 server:
-  port: 8080
+  port: ${EXPOSED_PORT_APP:8080}
   servlet:
     context-path: /service--transaction-pismo

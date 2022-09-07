@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    initialization-mode: always
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:14.5:///
+    username: sa
+    password: sa
+  profiles:
+    active: test
+  jpa:
+    properties:
+      hibernate:
+        default_schema: test
+  flyway:
+    schemas:
+      - test

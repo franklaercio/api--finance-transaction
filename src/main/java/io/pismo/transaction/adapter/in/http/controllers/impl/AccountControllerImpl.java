@@ -6,11 +6,13 @@ import io.pismo.transaction.adapter.in.http.controllers.data.request.CreateAccou
 import io.pismo.transaction.adapter.in.http.controllers.data.response.GetAccountResponse;
 import io.pismo.transaction.domain.models.Account;
 import io.pismo.transaction.domain.port.in.AccountUseCase;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,20 +22,25 @@ public class AccountControllerImpl implements AccountController {
   private final AccountUseCase accountUseCase;
   private final AccountResponseConvert accountResponseConvert;
 
-  public AccountControllerImpl(AccountUseCase accountUseCase, AccountResponseConvert accountResponseConvert) {
+  public AccountControllerImpl(AccountUseCase accountUseCase,
+      AccountResponseConvert accountResponseConvert) {
     this.accountUseCase = accountUseCase;
     this.accountResponseConvert = accountResponseConvert;
   }
 
   @Override
-  public ResponseEntity<Void> createAccount(CreateAccountRequest createAccountRequest) {
+  @PostMapping
+  public ResponseEntity<Void> createAccount(
+      @RequestBody CreateAccountRequest createAccountRequest) {
     this.accountUseCase.createAccount(createAccountRequest.getDocumentNumber());
 
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @Override
-  public ResponseEntity<GetAccountResponse> getAccountById(Long accountId) {
+  @GetMapping
+  public ResponseEntity<GetAccountResponse> getAccountById(
+      @RequestParam(name = "accountId") Long accountId) {
     Account account = this.accountUseCase.findAccountById(accountId);
     GetAccountResponse response = this.accountResponseConvert.convert(account);
 
