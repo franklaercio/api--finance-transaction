@@ -66,8 +66,7 @@ public class AccountControllerTest {
   void should_get_account_by_id_and_save_cache() throws Exception {
 
     this.mockMvc.perform(
-            get("/accounts")
-                .param("accountId", "1")
+            get("/accounts/{accountId}", 1)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is2xxSuccessful())
@@ -85,8 +84,7 @@ public class AccountControllerTest {
   void should_given_not_found_when_not_exists_account() throws Exception {
 
     this.mockMvc.perform(
-            get("/accounts")
-                .param("accountId", "-1")
+            get("/accounts/{accountId}", -1)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
@@ -101,7 +99,7 @@ public class AccountControllerTest {
   void should_given_bad_request_when_not_send_account_id() throws Exception {
 
     this.mockMvc.perform(
-            get("/accounts")
+            get("/accounts/a")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());

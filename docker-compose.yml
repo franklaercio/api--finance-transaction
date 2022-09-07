@@ -17,16 +17,6 @@ services:
       - "8001:8001"
     volumes:
       - redisinsight:/data/redisinsight
-  localstack-transaction:
-    container_name: localstack-transaction
-    image: localstack/localstack:latest
-    environment:
-      - SERVICES=redis
-      - DATA_DIR=/tmp/localstack-transaction/data
-    ports:
-      - "4566-4583:4566-4583"
-    volumes:
-      - "/tmp/localstack-transaction/data"
   db-transaction:
     image: postgres
     container_name: db-transaction
@@ -44,9 +34,8 @@ services:
     image: service--transaction-pismo
     build: .
     depends_on:
-      - db-transaction
       - cache
-      - localstack-transaction
+      - db-transaction
       - redisinsight
     ports:
       - "8080:8080"
@@ -60,14 +49,10 @@ services:
     links:
       - db-transaction
       - cache
-      - localstack-transaction
     volumes:
       - ./:/src
 
 volumes:
   pgdata:
-    driver: local
   cache:
-    driver: local
   redisinsight:
-    driver: local

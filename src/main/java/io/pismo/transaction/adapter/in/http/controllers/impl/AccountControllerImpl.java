@@ -9,10 +9,10 @@ import io.pismo.transaction.domain.port.in.AccountUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,9 +38,9 @@ public class AccountControllerImpl implements AccountController {
   }
 
   @Override
-  @GetMapping
+  @GetMapping("/{accountId}")
   public ResponseEntity<GetAccountResponse> getAccountById(
-      @RequestParam(name = "accountId") Long accountId) {
+      @PathVariable(name = "accountId") Long accountId) {
     Account account = this.accountUseCase.findAccountById(accountId);
     GetAccountResponse response = this.accountResponseConvert.convert(account);
 
