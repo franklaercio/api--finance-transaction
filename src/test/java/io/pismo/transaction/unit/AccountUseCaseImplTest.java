@@ -92,6 +92,17 @@ class AccountUseCaseImplTest {
   @Test
   void should_given_bad_request_if_document_number_is_smaller_that_eleven() {
     try {
+      this.accountUseCase.createAccount("123");
+    } catch (Exception e) {
+      assertEquals("Account isn't valid, please check your data", e.getMessage());
+    }
+
+    verify(this.accountDatabase, never()).createAccount(any());
+  }
+
+  @Test
+  void should_given_bad_request_if_document_number_with_invalid_number() {
+    try {
       this.accountUseCase.createAccount("123a456a8c00");
     } catch (Exception e) {
       assertEquals("Account isn't valid, please check your data", e.getMessage());

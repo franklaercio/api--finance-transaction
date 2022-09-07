@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.pismo.transaction.Application;
-import io.pismo.transaction.adapter.in.http.advices.AccountAdvice;
+import io.pismo.transaction.adapter.in.http.advices.ApplicationAdvice;
 import io.pismo.transaction.adapter.in.http.controllers.impl.AccountControllerImpl;
 import io.pismo.transaction.adapter.in.http.controllers.impl.TransactionControllerImpl;
 import io.pismo.transaction.adapter.out.databases.entities.TransactionEntity;
@@ -42,7 +42,7 @@ public class TransactionControllerTest {
   MockMvc mockMvc;
 
   @Autowired
-  AccountAdvice accountAdvice;
+  ApplicationAdvice applicationAdvice;
 
   @Autowired
   AccountControllerImpl accountController;
@@ -59,7 +59,7 @@ public class TransactionControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    mockMvc = MockMvcBuilders.standaloneSetup(accountAdvice, accountController,
+    mockMvc = MockMvcBuilders.standaloneSetup(applicationAdvice, accountController,
         transactionController).build();
   }
 
@@ -120,6 +120,25 @@ public class TransactionControllerTest {
         .andExpectAll(content().contentType(MediaType.APPLICATION_JSON),
             jsonPath("$.code").value(400),
             jsonPath("$.message").value("Please verify your request and try again")
+        );
+  }
+
+  @Test
+  void should_given_bad_request_when_operation_is_not_valid() throws Exception {
+
+    this.mockMvc.perform(
+            post("/transactions")
+                .content("{"
+                    + "  \"account_id\": 1,"
+                    + "  \"amount\": -0.45,"
+                    + "  \"operation_id\": -4"
+                    + "}")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpectAll(content().contentType(MediaType.APPLICATION_JSON),
+            jsonPath("$.code").value(400),
+            jsonPath("$.message").value("Please check your request and try again")
         );
   }
 

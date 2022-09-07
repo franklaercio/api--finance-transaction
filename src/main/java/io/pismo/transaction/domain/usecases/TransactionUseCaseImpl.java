@@ -41,7 +41,7 @@ public class TransactionUseCaseImpl implements TransactionUseCase {
       throw new BadRequestException("Please verify your request and try again");
     }
 
-    if ((isWithDrawOrBuy(operation)) && amount.longValue() > 0) {
+    if (isWithDrawOrBuy(operation) && amount.longValue() > 0) {
       amount = amount.negate();
     }
 

@@ -18,18 +18,23 @@ public class StringUtils {
           return false;
         }
       }
-    } else {
-      return false;
     }
+
     return true;
   }
 
-  public static boolean isNumber(String text) {
-    return text.matches(".\\\\d+");
+  private static boolean isNumber(String text) {
+    try {
+      Double.parseDouble(text);
+    } catch (Exception e) {
+      return false;
+    }
+
+    return true;
   }
 
   public static boolean isNotNumberOrBlank(String text) {
-    return isBlank(text) && !isNumber(text);
+    return isBlank(text) || !isNumber(text);
   }
 
 }

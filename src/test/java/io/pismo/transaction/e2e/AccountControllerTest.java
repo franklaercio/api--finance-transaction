@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.pismo.transaction.Application;
-import io.pismo.transaction.adapter.in.http.advices.AccountAdvice;
+import io.pismo.transaction.adapter.in.http.advices.ApplicationAdvice;
 import io.pismo.transaction.adapter.in.http.controllers.AccountController;
 import io.pismo.transaction.adapter.in.http.controllers.TransactionController;
 import io.pismo.transaction.adapter.out.databases.entities.AccountEntity;
@@ -41,7 +41,7 @@ public class AccountControllerTest {
   MockMvc mockMvc;
 
   @Autowired
-  AccountAdvice accountAdvice;
+  ApplicationAdvice applicationAdvice;
 
   @Autowired
   AccountController accountController;
@@ -58,7 +58,7 @@ public class AccountControllerTest {
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    mockMvc = MockMvcBuilders.standaloneSetup(accountAdvice, accountController,
+    mockMvc = MockMvcBuilders.standaloneSetup(applicationAdvice, accountController,
         transactionController).build();
   }
 
