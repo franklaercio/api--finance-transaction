@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisProperties {
 
-  @Value("${redis.host:127.0.0.1}")
+  @Value("${spring.redis.host:127.0.0.1}")
   private String host;
 
-  @Value("${redis.port:6379}")
+  @Value("${spring.redis.port:6379}")
   private int port;
 
-  @Value("${redis.password:}")
+  @Value("${spring.redis.password:}")
   private String password;
 
   public String getHost() {
