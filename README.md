@@ -35,7 +35,23 @@ $ docker rm $(docker ps -q -f status=exited)
 $ docker compose up -d
 ```
 
-### Estrutura do projeto
+In addition, the application can be accessed through the URL below:
+
+```
+# Heroku
+https://service--transaction-pismo.herokuapp.com/service--transaction-pismo/swagger-ui/index.html
+```
+
+### CI/CD
+
+As soon as a new commit is made to main, a new deployment is performed automatically in heroku.:
+
+```
+# CI using Github Actions
+cd .github/workflows/maven.yml
+```
+
+### Project Structure
 
 The project structure is based on the hexagonal architecture model, which aims to separate what is
 an external dependency and what is the core of the application.
@@ -46,15 +62,13 @@ Therefore, the transaction was separate into domain, adapters and configs.
 - *Adapters*: layer responsible for to concentrate external dependencies.
 - *Configs*: layer responsible for to concentrate all the configurations for run this service.
 
-A seguir podemos observar como a estrutura do projeto está definida.
-
 Next, a drawing with the idea of architecture.
 
 <p>
    <img alt="hexagonal" width="500" src="assets/hexagonal.png" />
 <p>
 
-### Testes da Aplicação
+### Application Tests
 
 At this moment the application is coverage by 100%. To achieve this, end-to-end testing was used,
 unit tests for business rules and domain settings and entities ignored in coverage. You can check
