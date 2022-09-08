@@ -12,6 +12,9 @@ public class RedisProperties {
   @Value("${redis.port:6379}")
   private int port;
 
+  @Value("${redis.password:}")
+  private String password;
+
   public String getHost() {
     return host;
   }
@@ -26,5 +29,13 @@ public class RedisProperties {
 
   public void setPort(int port) {
     this.port = port;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }

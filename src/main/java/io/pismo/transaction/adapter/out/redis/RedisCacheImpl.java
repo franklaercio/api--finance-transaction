@@ -2,6 +2,7 @@ package io.pismo.transaction.adapter.out.redis;
 
 import io.pismo.transaction.domain.port.out.RedisCache;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +18,7 @@ public class RedisCacheImpl implements RedisCache {
 
   private ValueOperations<String, String> valueOperations;
 
-  public RedisCacheImpl( RedisTemplate<String, String> redisTemplate) {
+  public RedisCacheImpl(RedisTemplate<String, String> redisTemplate) {
     this.redisTemplate = redisTemplate;
   }
 
@@ -27,7 +28,7 @@ public class RedisCacheImpl implements RedisCache {
 
       logger.info("Saving... cache with key {}", prefix.concat(key));
 
-      valueOperations.set(prefix.concat(key), value);
+      valueOperations.set(prefix.concat(key), value, 1, TimeUnit.HOURS);
     } catch (Exception e) {
       logger.warn("An unexpected error occurred, unable to save cached data");
     }

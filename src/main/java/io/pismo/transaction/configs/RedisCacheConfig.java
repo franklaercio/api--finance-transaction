@@ -23,8 +23,10 @@ public class RedisCacheConfig {
   @Profile("!test")
   @Bean
   public LettuceConnectionFactory redisConnectionFactory() {
-    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(
-        redisProperties.getHost(), redisProperties.getPort());
+    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+    configuration.setHostName(redisProperties.getHost());
+    configuration.setPort(redisProperties.getPort());
+    configuration.setPassword(redisProperties.getPassword());
     return new LettuceConnectionFactory(configuration);
   }
 
