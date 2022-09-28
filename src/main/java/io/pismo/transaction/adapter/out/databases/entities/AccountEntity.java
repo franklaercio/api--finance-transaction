@@ -1,5 +1,6 @@
 package io.pismo.transaction.adapter.out.databases.entities;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,9 @@ public class AccountEntity {
   @Column(name = "DOCUMENT_NUMBER", length = 11)
   private String documentNumber;
 
+  @Column(name = "AVAILABLE_CREDIT_LIMIT")
+  private BigDecimal availableCreditLimit;
+
   public Long getId() {
     return id;
   }
@@ -34,5 +38,13 @@ public class AccountEntity {
 
   public void setDocumentNumber(String documentNumber) {
     this.documentNumber = documentNumber;
+  }
+
+  public BigDecimal getAvailableCreditLimit() {
+    return availableCreditLimit;
+  }
+
+  public void setAvailableCreditLimit(BigDecimal availableCreditLimit) {
+    this.availableCreditLimit = availableCreditLimit;
   }
 }

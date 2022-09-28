@@ -12,6 +12,7 @@ import io.pismo.transaction.domain.models.Account;
 import io.pismo.transaction.domain.port.out.AccountDatabase;
 import io.pismo.transaction.domain.port.out.RedisCache;
 import io.pismo.transaction.domain.usecases.AccountUseCaseImpl;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,8 @@ class AccountUseCaseImplTest {
   @Test
   void should_find_account_by_id_with_no_cache() {
     when(redisCache.find(any(), any())).thenReturn(null);
-    when(accountDatabase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
+    when(accountDatabase.findAccountById(any())).thenReturn(
+        new Account(1L, "12345678900", new BigDecimal("450.00")));
 
     Account account = this.accountUseCase.findAccountById(1L);
 
@@ -69,46 +71,47 @@ class AccountUseCaseImplTest {
       assertEquals("Account isn't valid, please check your data", e.getMessage());
     }
 
-    verify(this.accountDatabase, never()).createAccount(any());
+    verify(this.accountDatabase, never()).createAccount(any(), any());
   }
 
   @Test
   void should_create_new_account() {
-    assertDoesNotThrow(() -> this.accountUseCase.createAccount("12345678900"));
-    verify(this.accountDatabase, times(1)).createAccount(any());
+    assertDoesNotThrow(
+        () -> this.accountUseCase.createAccount("12345678900", new BigDecimal("450.00")));
+    verify(this.accountDatabase, times(1)).createAccount(any(), any());
   }
 
   @Test
   void should_given_bad_request_if_document_number_is_null() {
     try {
-      this.accountUseCase.createAccount(null);
+      this.accountUseCase.createAccount(null, null);
     } catch (Exception e) {
       assertEquals("Account isn't valid, please check your data", e.getMessage());
     }
 
-    verify(this.accountDatabase, never()).createAccount(any());
+    verify(this.accountDatabase, never()).createAccount(any(), any());
   }
 
   @Test
   void should_given_bad_request_if_document_number_is_smaller_that_eleven() {
     try {
-      this.accountUseCase.createAccount("123");
+      this.accountUseCase.createAccount("123", new BigDecimal("450.00"));
     } catch (Exception e) {
       assertEquals("Account isn't valid, please check your data", e.getMessage());
     }
 
-    verify(this.accountDatabase, never()).createAccount(any());
+    verify(this.accountDatabase, never()).createAccount(any(), any());
   }
 
   @Test
   void should_given_bad_request_if_document_number_with_invalid_number() {
     try {
-      this.accountUseCase.createAccount("123a456a8c00");
+      this.accountUseCase.createAccount("123a456a8c00", new BigDecimal("450.00"));
     } catch (Exception e) {
       assertEquals("Account isn't valid, please check your data", e.getMessage());
     }
 
-    verify(this.accountDatabase, never()).createAccount(any());
+    verify(this.accountDatabase, never()).createAccount(any(), any());
   }
 
 }

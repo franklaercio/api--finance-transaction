@@ -85,12 +85,9 @@ public class TransactionControllerTest {
     assertEquals(2L, transaction.getId());
     assertEquals(0.45, transaction.getAmount().doubleValue());
 
-    String accountCache = this.redisCache.find(RedisKeyEnum.CACHE_ACCOUNT.getValue(), "1")
-        .orElse(null);
     String operationCache = this.redisCache.find(RedisKeyEnum.CACHE_OPERATION.getValue(), "4")
         .orElse(null);
 
-    assertEquals("{\"accountId\":1,\"documentNumber\":\"12345678900\"}", accountCache);
     assertEquals("{\"id\":4,\"description\":\"PAGAMENTO\"}", operationCache);
   }
 
@@ -155,5 +152,20 @@ public class TransactionControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated());
+  }
+
+  @Test
+  void should_bad_request_when_is_not_available_credit_limit() throws Exception {
+
+    this.mockMvc.perform(
+            post("/transactions")
+                .content("{"
+                    + "  \"account_id\": 1,"
+                    + "  \"amount\": 10000000000.00,"
+                    + "  \"operation_id\": 2"
+                    + "}")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 }

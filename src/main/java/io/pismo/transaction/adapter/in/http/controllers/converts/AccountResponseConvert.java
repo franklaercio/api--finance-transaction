@@ -13,6 +13,7 @@ public class AccountResponseConvert implements Converter<Account, GetAccountResp
     GetAccountResponse response = new GetAccountResponse();
     response.setAccountId(source.getAccountId());
     response.setDocumentNumber(source.getDocumentNumber());
+    response.setAvailableCreditLimit(source.getAccountAvailableLimit());
     return response;
   }
 }

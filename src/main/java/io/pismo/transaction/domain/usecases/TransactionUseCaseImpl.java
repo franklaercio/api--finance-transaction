@@ -12,6 +12,7 @@ import io.pismo.transaction.domain.port.out.TransactionDatabase;
 import java.math.BigDecimal;
 import java.util.Objects;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TransactionUseCaseImpl implements TransactionUseCase {
@@ -28,6 +29,7 @@ public class TransactionUseCaseImpl implements TransactionUseCase {
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void createTransaction(Long accountId, Long operationId, BigDecimal amount) {
 
     if (Objects.isNull(accountId) || Objects.isNull(operationId) || Objects.isNull(amount)) {
@@ -45,8 +47,18 @@ public class TransactionUseCaseImpl implements TransactionUseCase {
       amount = amount.negate();
     }
 
-    this.transactionDatabase.createTransaction(
-        new Transaction(account.getAccountId(), operation.getId(), amount));
+    BigDecimal updateAvailableLimit = account.getAccountAvailableLimit().add(amount);
+
+    if (updateAvailableLimit.compareTo(new BigDecimal("0.0")) > 0) {
+      this.transactionDatabase.createTransaction(
+          new Transaction(account.getAccountId(), operation.getId(), amount));
+
+      account.setAccountAvailableLimit(updateAvailableLimit);
+
+      this.accountUseCase.updateAccount(account);
+    } else {
+      throw new BadRequestException("Please verify your request and try again");
+    }
   }
 
   private boolean isWithDrawOrBuy(Operation operation) {

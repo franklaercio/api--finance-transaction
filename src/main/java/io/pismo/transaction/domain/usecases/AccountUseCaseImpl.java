@@ -8,6 +8,7 @@ import io.pismo.transaction.domain.port.in.AccountUseCase;
 import io.pismo.transaction.domain.port.out.AccountDatabase;
 import io.pismo.transaction.domain.port.out.RedisCache;
 import io.pismo.transaction.utils.StringUtils;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,14 @@ public class AccountUseCaseImpl implements AccountUseCase {
   }
 
   @Override
-  public void createAccount(String documentNumber) {
+  public Account createAccount(String documentNumber, BigDecimal availableCreditLimit) {
 
     if (StringUtils.isNotNumberOrBlank(documentNumber)
         || StringUtils.length(documentNumber) != 11) {
       throw new BadRequestException("Account isn't valid, please check your data");
     }
 
-    this.accountDatabase.createAccount(documentNumber);
+    return this.accountDatabase.createAccount(documentNumber, availableCreditLimit);
   }
 
   @Override
@@ -55,5 +56,16 @@ public class AccountUseCaseImpl implements AccountUseCase {
         accountId.toString(), gson.toJson(account));
 
     return account;
+  }
+
+  @Override
+  public void updateAccount(Account account) {
+    this.redisCache.delete(RedisKeyEnum.CACHE_ACCOUNT.getValue(),
+        account.getAccountId().toString());
+
+    Account updatedAccount = this.accountDatabase.updateAccount(account);
+
+    this.redisCache.create(RedisKeyEnum.CACHE_ACCOUNT.getValue(),
+        updatedAccount.toString(), gson.toJson(account));
   }
 }

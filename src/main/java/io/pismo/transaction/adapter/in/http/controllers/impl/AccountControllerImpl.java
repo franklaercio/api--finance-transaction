@@ -6,7 +6,6 @@ import io.pismo.transaction.adapter.in.http.controllers.data.request.CreateAccou
 import io.pismo.transaction.adapter.in.http.controllers.data.response.GetAccountResponse;
 import io.pismo.transaction.domain.models.Account;
 import io.pismo.transaction.domain.port.in.AccountUseCase;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +29,13 @@ public class AccountControllerImpl implements AccountController {
 
   @Override
   @PostMapping
-  public ResponseEntity<Void> createAccount(
+  public ResponseEntity<GetAccountResponse> createAccount(
       @RequestBody CreateAccountRequest createAccountRequest) {
-    this.accountUseCase.createAccount(createAccountRequest.getDocumentNumber());
+    Account account = this.accountUseCase.createAccount(createAccountRequest.getDocumentNumber(),
+        createAccountRequest.getAvailableCreditLimit());
+    GetAccountResponse response = this.accountResponseConvert.convert(account);
 
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    return ResponseEntity.ok(response);
   }
 
   @Override

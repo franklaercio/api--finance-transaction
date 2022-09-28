@@ -6,6 +6,7 @@ import io.pismo.transaction.adapter.out.databases.repositories.AccountRepository
 import io.pismo.transaction.domain.exceptions.NotFoundException;
 import io.pismo.transaction.domain.models.Account;
 import io.pismo.transaction.domain.port.out.AccountDatabase;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,12 @@ public class AccountDatabaseImpl implements AccountDatabase {
 
   @Override
   @Transactional(rollbackOn = Exception.class)
-  public void createAccount(String documentNumber) {
+  public Account createAccount(String documentNumber, BigDecimal availableCreditLimit) {
     AccountEntity accountEntity = new AccountEntity();
     accountEntity.setDocumentNumber(documentNumber);
+    accountEntity.setAvailableCreditLimit(availableCreditLimit);
 
-    this.accountRepository.save(accountEntity);
+    return this.accountDatabaseConvert.convert(this.accountRepository.save(accountEntity));
   }
 
   @Override
@@ -40,6 +42,18 @@ public class AccountDatabaseImpl implements AccountDatabase {
     }
 
     return this.accountDatabaseConvert.convert(accountEntity);
+  }
+
+  @Override
+  public Account updateAccount(Account account) {
+    AccountEntity accountEntity = new AccountEntity();
+    accountEntity.setId(account.getAccountId());
+    accountEntity.setDocumentNumber(account.getDocumentNumber());
+    accountEntity.setAvailableCreditLimit(account.getAccountAvailableLimit());
+
+    AccountEntity updatedAccount = this.accountRepository.save(accountEntity);
+
+    return this.accountDatabaseConvert.convert(updatedAccount);
   }
 
 }

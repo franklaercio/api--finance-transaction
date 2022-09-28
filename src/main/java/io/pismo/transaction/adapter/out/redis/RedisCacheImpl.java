@@ -34,6 +34,15 @@ public class RedisCacheImpl implements RedisCache {
     }
   }
 
+  public void delete(String prefix, String key) {
+    try {
+      logger.info("Deleting... cache with key {}", prefix.concat(key));
+      redisTemplate.delete(prefix.concat(key));
+    } catch (Exception e) {
+      logger.warn("An unexpected error occurred, unable to save cached data");
+    }
+  }
+
   public Optional<String> find(String prefix, String key) {
     try {
       this.valueOperations = this.redisTemplate.opsForValue();

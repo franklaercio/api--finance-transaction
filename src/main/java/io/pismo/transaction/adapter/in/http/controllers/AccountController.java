@@ -18,7 +18,8 @@ public interface AccountController {
       @ApiResponse(responseCode = "400", description = "Missing or invalid request body"),
       @ApiResponse(responseCode = "500", description = "Internal server error")}
   )
-  ResponseEntity<Void> createAccount(@RequestBody CreateAccountRequest createAccountRequest);
+  ResponseEntity<GetAccountResponse> createAccount(
+      @RequestBody CreateAccountRequest createAccountRequest);
 
   @Operation(summary = "Get account by accountId")
   @ApiResponses(value = {

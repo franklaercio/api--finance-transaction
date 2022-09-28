@@ -72,12 +72,15 @@ public class AccountControllerTest {
         .andExpect(status().is2xxSuccessful())
         .andExpectAll(content().contentType(MediaType.APPLICATION_JSON),
             jsonPath("$.account_id").value(1),
-            jsonPath("$.document_number").value("12345678900")
+            jsonPath("$.document_number").value("12345678900"),
+            jsonPath("$.available_credit_limit").value("450.0")
         );
 
     String cache = this.redisCache.find("ACCOUNT-", "1").orElse(null);
 
-    assertEquals("{\"accountId\":1,\"documentNumber\":\"12345678900\"}", cache);
+    assertEquals(
+        "{\"accountId\":1,\"documentNumber\":\"12345678900\",\"accountAvailableLimit\":450.00}",
+        cache);
   }
 
   @Test
@@ -110,10 +113,10 @@ public class AccountControllerTest {
 
     this.mockMvc.perform(
             post("/accounts")
-                .content("{\"document_number\": \"12345678700\"}")
+                .content("{\"document_number\": \"12345678700\", \"available_credit_limit\": 450.00}")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isCreated());
+        .andExpect(status().is2xxSuccessful());
 
     AccountEntity account = this.accountRepository.findById(2L).orElse(null);
 

@@ -10,6 +10,7 @@ public class AccountDatabaseConvert implements Converter<AccountEntity, Account>
 
   @Override
   public Account convert(AccountEntity source) {
-    return new Account(source.getId(), source.getDocumentNumber());
+    return new Account(source.getId(), source.getDocumentNumber(),
+        source.getAvailableCreditLimit());
   }
 }

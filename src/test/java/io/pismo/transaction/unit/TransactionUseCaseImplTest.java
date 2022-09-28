@@ -39,7 +39,8 @@ public class TransactionUseCaseImplTest {
 
   @Test
   void should_create_transaction_with_purchase_in_installments() {
-    when(accountUseCase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
+    when(accountUseCase.findAccountById(any())).thenReturn(
+        new Account(1L, "12345678900", new BigDecimal("450.00")));
     when(operationUseCase.findOperationById(any())).thenReturn(
         new Operation(2L, OperationTypeEnum.PURCHASE_IN_INSTALLMENTS.getValue()));
 
@@ -51,7 +52,8 @@ public class TransactionUseCaseImplTest {
 
   @Test
   void should_create_transaction_cash_purchase() {
-    when(accountUseCase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
+    when(accountUseCase.findAccountById(any())).thenReturn(
+        new Account(1L, "12345678900", new BigDecimal("450.00")));
     when(operationUseCase.findOperationById(any())).thenReturn(
         new Operation(1L, OperationTypeEnum.CASH_PURCHASE.getValue()));
 
@@ -63,7 +65,8 @@ public class TransactionUseCaseImplTest {
 
   @Test
   void should_create_transaction_cash_withdraw() {
-    when(accountUseCase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
+    when(accountUseCase.findAccountById(any())).thenReturn(
+        new Account(1L, "12345678900", new BigDecimal("450.00")));
     when(operationUseCase.findOperationById(any())).thenReturn(
         new Operation(1L, OperationTypeEnum.WITHDRAW.getValue()));
 
@@ -75,7 +78,8 @@ public class TransactionUseCaseImplTest {
 
   @Test
   void should_give_bad_request_when_payment_is_not_valid() {
-    when(accountUseCase.findAccountById(any())).thenReturn(new Account(1L, "12345678900"));
+    when(accountUseCase.findAccountById(any())).thenReturn(
+        new Account(1L, "12345678900", new BigDecimal("450.00")));
     when(operationUseCase.findOperationById(any())).thenReturn(
         new Operation(4L, "PAGAMENTO"));
 
